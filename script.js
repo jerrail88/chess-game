@@ -37,6 +37,6 @@ themeButtons.forEach((btn) => {
     themeButtons.forEach((b) => b.classList.remove("active"));
     btn.classList.add("active");
     const theme = btn.dataset.theme;
-    console.log("Selected theme:", theme);
+    document.body.className = "theme-" + theme;
   });
 });
