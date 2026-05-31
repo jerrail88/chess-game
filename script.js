@@ -101,6 +101,7 @@ function animateMove(from, to, onComplete) {
     return;
   }
 
+  const movingSide = sideOf(boardState[from.row][from.col]);
   const dx = (to.col - from.col) * SQUARE_SIZE_PX;
   const dy = (to.row - from.row) * SQUARE_SIZE_PX;
 
@@ -114,7 +115,52 @@ function animateMove(from, to, onComplete) {
     capturedPiece.classList.add("fading-out");
   }
 
+  if (movingSide === "black") {
+    spawnSmokeTrail(movingPiece);
+    if (capturedPiece) {
+      setTimeout(() => spawnSmokeExplosion(toSquare), ANIM_DURATION_MS * 0.6);
+    }
+  }
+
   setTimeout(onComplete, ANIM_DURATION_MS);
+}
+
+function spawnSmokeTrail(pieceEl) {
+  const puffCount = 6;
+  const interval = ANIM_DURATION_MS / puffCount;
+  for (let i = 0; i < puffCount; i++) {
+    setTimeout(() => {
+      const rect = pieceEl.getBoundingClientRect();
+      if (rect.width === 0) return;
+      const puff = document.createElement("div");
+      puff.className = "smoke-puff";
+      puff.style.left = rect.left + rect.width / 2 + "px";
+      puff.style.top = rect.top + rect.height / 2 + "px";
+      document.body.appendChild(puff);
+      setTimeout(() => puff.remove(), 1200);
+    }, i * interval);
+  }
+}
+
+function spawnSmokeExplosion(squareEl) {
+  const rect = squareEl.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  const puffCount = 10;
+  for (let i = 0; i < puffCount; i++) {
+    const angle = (i / puffCount) * Math.PI * 2 + Math.random() * 0.3;
+    const distance = 30 + Math.random() * 30;
+    const dx = Math.cos(angle) * distance;
+    const dy = Math.sin(angle) * distance;
+    const puff = document.createElement("div");
+    puff.className = "smoke-burst";
+    puff.style.left = cx + "px";
+    puff.style.top = cy + "px";
+    puff.style.setProperty("--dx", dx + "px");
+    puff.style.setProperty("--dy", dy + "px");
+    document.body.appendChild(puff);
+    setTimeout(() => puff.remove(), 1100);
+  }
 }
 
 function handleSquareClick(row, col) {

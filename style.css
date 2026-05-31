@@ -229,6 +229,54 @@ body.theme-earth .piece.white {
   }
 }
 
+.smoke-puff,
+.smoke-burst {
+  position: fixed;
+  pointer-events: none;
+  z-index: 1000;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+}
+
+.smoke-puff {
+  width: 36px;
+  height: 36px;
+  background: radial-gradient(circle, rgba(156, 163, 175, 0.7), rgba(75, 85, 99, 0));
+  animation: smoke-rise 1.2s ease-out forwards;
+}
+
+@keyframes smoke-rise {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.4);
+  }
+  20% {
+    opacity: 0.75;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% - 50px)) scale(2.2);
+  }
+}
+
+.smoke-burst {
+  width: 32px;
+  height: 32px;
+  background: radial-gradient(circle, rgba(156, 163, 175, 0.9), rgba(55, 65, 81, 0));
+  animation: smoke-burst-anim 1.1s ease-out forwards;
+}
+
+@keyframes smoke-burst-anim {
+  0% {
+    opacity: 0.95;
+    transform: translate(-50%, -50%) scale(0.3);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(2.5);
+  }
+}
+
 @keyframes smoke-pulse {
   0%, 100% {
     text-shadow:
