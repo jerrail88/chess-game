@@ -33,6 +33,10 @@ let selectedSquare = null;
 let currentTurn = "white";
 let capturedByWhite = [];
 let capturedByBlack = [];
+let isAnimating = false;
+
+const ANIM_DURATION_MS = 400;
+const SQUARE_SIZE_PX = 60;
 
 const board = document.getElementById("board");
 const turnIndicator = document.getElementById("turn-indicator");
@@ -82,7 +86,40 @@ function renderBoard() {
   }
 }
 
+function getSquareElement(row, col) {
+  return board.children[row * 8 + col];
+}
+
+function animateMove(from, to, onComplete) {
+  const fromSquare = getSquareElement(from.row, from.col);
+  const toSquare = getSquareElement(to.row, to.col);
+  const movingPiece = fromSquare.querySelector(".piece");
+  const capturedPiece = toSquare.querySelector(".piece");
+
+  if (!movingPiece) {
+    onComplete();
+    return;
+  }
+
+  const dx = (to.col - from.col) * SQUARE_SIZE_PX;
+  const dy = (to.row - from.row) * SQUARE_SIZE_PX;
+
+  movingPiece.style.transition = `transform ${ANIM_DURATION_MS}ms ease`;
+  movingPiece.style.zIndex = "10";
+  requestAnimationFrame(() => {
+    movingPiece.style.transform = `translate(${dx}px, ${dy}px)`;
+  });
+
+  if (capturedPiece) {
+    capturedPiece.classList.add("fading-out");
+  }
+
+  setTimeout(onComplete, ANIM_DURATION_MS);
+}
+
 function handleSquareClick(row, col) {
+  if (isAnimating) return;
+
   const clickedPiece = boardState[row][col];
   const clickedSide = sideOf(clickedPiece);
 
@@ -92,9 +129,18 @@ function handleSquareClick(row, col) {
 
     if (from.row === row && from.col === col) {
       selectedSquare = null;
-    } else if (clickedSide === currentTurn) {
+      renderBoard();
+      return;
+    }
+
+    if (clickedSide === currentTurn) {
       selectedSquare = { row, col };
-    } else {
+      renderBoard();
+      return;
+    }
+
+    isAnimating = true;
+    animateMove(from, { row, col }, () => {
       if (clickedPiece) {
         if (currentTurn === "white") {
           capturedByWhite.push(clickedPiece);
@@ -106,16 +152,18 @@ function handleSquareClick(row, col) {
       boardState[from.row][from.col] = "";
       selectedSquare = null;
       currentTurn = currentTurn === "white" ? "black" : "white";
+
       updateScoreboard();
-    }
+      renderBoard();
+      updateTurnIndicator();
+      isAnimating = false;
+    });
   } else {
     if (clickedSide === currentTurn) {
       selectedSquare = { row, col };
+      renderBoard();
     }
   }
-
-  renderBoard();
-  updateTurnIndicator();
 }
 
 function updateTurnIndicator() {
