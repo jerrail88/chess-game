@@ -1,3 +1,14 @@
+const startingPosition = [
+  ["♜", "♞", "♝", "♛", "♚", "♝", "♞", "♜"],
+  ["♟", "♟", "♟", "♟", "♟", "♟", "♟", "♟"],
+  ["", "", "", "", "", "", "", ""],
+  ["", "", "", "", "", "", "", ""],
+  ["", "", "", "", "", "", "", ""],
+  ["", "", "", "", "", "", "", ""],
+  ["♙", "♙", "♙", "♙", "♙", "♙", "♙", "♙"],
+  ["♖", "♘", "♗", "♕", "♔", "♗", "♘", "♖"],
+];
+
 const board = document.getElementById("board");
 
 for (let row = 0; row < 8; row++) {
@@ -6,6 +17,16 @@ for (let row = 0; row < 8; row++) {
     square.classList.add("square");
     const isLight = (row + col) % 2 === 0;
     square.classList.add(isLight ? "light" : "dark");
+
+    const pieceChar = startingPosition[row][col];
+    if (pieceChar) {
+      const piece = document.createElement("span");
+      piece.classList.add("piece");
+      piece.classList.add(row < 2 ? "black" : "white");
+      piece.textContent = pieceChar;
+      square.appendChild(piece);
+    }
+
     board.appendChild(square);
   }
 }
