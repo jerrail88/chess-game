@@ -277,6 +277,57 @@ body.theme-earth .piece.white {
   }
 }
 
+.wind-wisp,
+.wind-burst {
+  position: fixed;
+  pointer-events: none;
+  z-index: 1000;
+  border-radius: 5px;
+  transform: translate(-50%, -50%);
+}
+
+.wind-wisp {
+  width: 40px;
+  height: 6px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0));
+  animation: wind-trail 1s ease-out forwards;
+}
+
+@keyframes wind-trail {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--angle)) scale(0.5);
+  }
+  25% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--drift-x)), calc(-50% + var(--drift-y))) rotate(calc(var(--angle) + 360deg)) scale(1.4);
+  }
+}
+
+.wind-burst {
+  width: 50px;
+  height: 8px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0));
+  animation: wind-burst-anim 1.2s ease-out forwards;
+}
+
+@keyframes wind-burst-anim {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--angle)) scale(0.3);
+  }
+  20% {
+    opacity: 0.95;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) rotate(calc(var(--angle) + 540deg)) scale(1.8);
+  }
+}
+
 @keyframes smoke-pulse {
   0%, 100% {
     text-shadow:

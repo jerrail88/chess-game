@@ -120,9 +120,23 @@ function animateMove(from, to, onComplete) {
     if (capturedPiece) {
       setTimeout(() => spawnSmokeExplosion(toSquare), ANIM_DURATION_MS * 0.6);
     }
+  } else if (movingSide === "white") {
+    const theme = getCurrentTheme();
+    if (theme === "glass") {
+      spawnWindTrail(movingPiece);
+      if (capturedPiece) {
+        setTimeout(() => spawnWindExplosion(toSquare), ANIM_DURATION_MS * 0.6);
+      }
+    }
   }
 
   setTimeout(onComplete, ANIM_DURATION_MS);
+}
+
+function getCurrentTheme() {
+  const cls = document.body.className;
+  if (cls.startsWith("theme-")) return cls.replace("theme-", "");
+  return "glass";
 }
 
 function spawnSmokeTrail(pieceEl) {
@@ -160,6 +174,54 @@ function spawnSmokeExplosion(squareEl) {
     puff.style.setProperty("--dy", dy + "px");
     document.body.appendChild(puff);
     setTimeout(() => puff.remove(), 1100);
+  }
+}
+
+function spawnWindTrail(pieceEl) {
+  const wispCount = 6;
+  const interval = ANIM_DURATION_MS / wispCount;
+  for (let i = 0; i < wispCount; i++) {
+    setTimeout(() => {
+      const rect = pieceEl.getBoundingClientRect();
+      if (rect.width === 0) return;
+      const wisp = document.createElement("div");
+      wisp.className = "wind-wisp";
+      const angle = Math.random() * 360;
+      const driftAngle = Math.random() * Math.PI * 2;
+      const driftDist = 25 + Math.random() * 25;
+      const driftX = Math.cos(driftAngle) * driftDist;
+      const driftY = Math.sin(driftAngle) * driftDist - 10;
+      wisp.style.left = rect.left + rect.width / 2 + "px";
+      wisp.style.top = rect.top + rect.height / 2 + "px";
+      wisp.style.setProperty("--angle", angle + "deg");
+      wisp.style.setProperty("--drift-x", driftX + "px");
+      wisp.style.setProperty("--drift-y", driftY + "px");
+      document.body.appendChild(wisp);
+      setTimeout(() => wisp.remove(), 1100);
+    }, i * interval);
+  }
+}
+
+function spawnWindExplosion(squareEl) {
+  const rect = squareEl.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  const wispCount = 12;
+  for (let i = 0; i < wispCount; i++) {
+    const angle = (i / wispCount) * 360;
+    const radius = 35 + Math.random() * 25;
+    const angleRad = (angle * Math.PI) / 180;
+    const dx = Math.cos(angleRad) * radius;
+    const dy = Math.sin(angleRad) * radius;
+    const wisp = document.createElement("div");
+    wisp.className = "wind-burst";
+    wisp.style.left = cx + "px";
+    wisp.style.top = cy + "px";
+    wisp.style.setProperty("--angle", angle + "deg");
+    wisp.style.setProperty("--dx", dx + "px");
+    wisp.style.setProperty("--dy", dy + "px");
+    document.body.appendChild(wisp);
+    setTimeout(() => wisp.remove(), 1300);
   }
 }
 
