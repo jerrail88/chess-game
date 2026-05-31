@@ -12,8 +12,48 @@ body {
 }
 
 h1 {
-  margin-bottom: 40px;
+  margin-bottom: 24px;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+  letter-spacing: 0.08em;
+}
+
+#theme-selector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 600px;
+}
+
+.theme-btn {
+  padding: 10px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: inherit;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.2s;
+}
+
+.theme-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.theme-btn.active {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.8);
+  font-weight: 600;
+}
+
+.theme-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
 }
 
 #board {
