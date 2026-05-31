@@ -115,6 +115,70 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+}
+
+.square.selected {
+  outline: 3px solid #fbbf24;
+  outline-offset: -3px;
+  z-index: 2;
+}
+
+#scoreboard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 480px;
+  margin-bottom: 16px;
+}
+
+.player-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.player-name {
+  font-weight: 600;
+  font-size: 15px;
+  min-width: 60px;
+}
+
+.captured-pieces {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  font-size: 22px;
+  line-height: 1;
+  min-height: 24px;
+}
+
+.captured-piece {
+  opacity: 0.9;
+}
+
+.player-score {
+  font-size: 13px;
+  white-space: nowrap;
+  opacity: 0.85;
+}
+
+#turn-indicator {
+  margin-bottom: 20px;
+  padding: 8px 22px;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.05em;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .piece {
