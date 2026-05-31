@@ -20,6 +20,14 @@ const PIECE_VALUES = {
 
 const WHITE_PIECES = new Set(["♔", "♕", "♖", "♗", "♘", "♙"]);
 
+// Both sides rendered with the SOLID silhouette shape so they look identical
+// in form; CSS colors them by side. Game state still uses ♔ vs ♚ to know which
+// piece belongs to which side.
+const PIECE_SHAPES = {
+  "♔": "♚", "♕": "♛", "♖": "♜", "♗": "♝", "♘": "♞", "♙": "♟",
+  "♚": "♚", "♛": "♛", "♜": "♜", "♝": "♝", "♞": "♞", "♟": "♟",
+};
+
 let boardState = startingPosition.map((row) => [...row]);
 let selectedSquare = null;
 let currentTurn = "white";
@@ -64,7 +72,7 @@ function renderBoard() {
         const piece = document.createElement("span");
         piece.classList.add("piece");
         piece.classList.add(isWhite(pieceChar) ? "white" : "black");
-        piece.textContent = pieceChar;
+        piece.textContent = PIECE_SHAPES[pieceChar];
         square.appendChild(piece);
       }
 
@@ -122,10 +130,10 @@ function calculateScore(pieces) {
 
 function updateScoreboard() {
   whiteCaptures.innerHTML = capturedByWhite
-    .map((p) => `<span class="captured-piece">${p}</span>`)
+    .map((p) => `<span class="captured-piece ${sideOf(p)}">${PIECE_SHAPES[p]}</span>`)
     .join("");
   blackCaptures.innerHTML = capturedByBlack
-    .map((p) => `<span class="captured-piece">${p}</span>`)
+    .map((p) => `<span class="captured-piece ${sideOf(p)}">${PIECE_SHAPES[p]}</span>`)
     .join("");
   whiteScore.textContent = calculateScore(capturedByWhite);
   blackScore.textContent = calculateScore(capturedByBlack);
